@@ -1,23 +1,34 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
-import { app } from "./firebase-config";
+// public/js/auth.js
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
 
-export async function register(email, password) {
-  const userCred = await createUserWithEmailAndPassword(auth, email, password);
-  await sendEmailVerification(userCred.user);
-  return userCred.user;
+const loginForm = document.getElementById("loginForm");
+const loginError = document.getElementById("loginError");
+
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError.textContent = "";
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // przekierowanie po sukcesie
+      window.location.href = "/raporty.html";
+    } catch (err) {
+      console.error("Login error", err);
+      if (err.code === "auth/wrong-password") loginError.textContent = "Nieprawidłowe hasło.";
+      else if (err.code === "auth/user-not-found") loginError.textContent = "Użytkownik nie istnieje.";
+      else loginError.textContent = "Błąd logowania: " + err.message;
+    }
+  });
 }
 
-export async function login(email, password) {
-  const userCred = await signInWithEmailAndPassword(auth, email, password);
-  return userCred.user;
-}
-
-export async function logout() {
-  await signOut(auth);
-}
-
-export async function resetPassword(email) {
-  await sendPasswordResetEmail(auth, email);
-}
+// Jeśli jesteś już zalogowany i wejdziesz na index.html, przekieruj
+onAuthStateChanged(auth, (user) => {
+  if (user && window.location.pathname === "/") {
+    window.location.href = "/raporty.html";
+  }
+});
