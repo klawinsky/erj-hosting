@@ -1,4 +1,6 @@
-// js/firebase-config.js
+// public/js/firebase-config.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+
 export const firebaseConfig = {
   apiKey: "AIzaSyDkT6b71bvy_AC3A3p8tBzQPe6vnPcX3bQ",
   authDomain: "erj---teczka-44ee7.firebaseapp.com",
@@ -7,3 +9,5 @@ export const firebaseConfig = {
   messagingSenderId: "331154622390",
   appId: "1:331154622390:web:2fc6982723def7ab1f6317"
 };
+
+export const app = initializeApp(firebaseConfig);
