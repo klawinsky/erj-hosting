@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting
+name: Deploy to Firebase Hosting (production)
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Deploy to Firebase Hosting (preview channel)
+      - name: Deploy to Firebase Hosting (production)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
